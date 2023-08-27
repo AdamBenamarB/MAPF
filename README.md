@@ -17,39 +17,39 @@ A demo that illustrates the pathfinding of two agents who encounter a collision 
 ![Demo - Collision](./Col.gif)
 
 Pathfinding of multiple Agents with obstacles and collisions
-Demonstration of multi-agent pathfinding in the presence of bbstacles and collisions between agents.
-![Demo - Collision](./ColMulgif)
+Demonstration of multi-agent pathfinding in the presence of obstacles and collisions between agents.
+![Demo - Multiple Collision](./ColMul.gif)
 
 ## How does it work
 
 #### A* pathfinding
 
--Initially, each agent employs the A* pathfinding algorithm to compute an optimal path to its designated goal.
+* Initially, each agent employs the A* pathfinding algorithm to compute an optimal path to its designated goal.
 
 #### Collision checks
 
--Subsequent to individual path computation, collision checks are performed among agents to detect potential intersections.
--If two agents' paths intersect at any point, a collision is flagged.
+* Subsequent to individual path computation, collision checks are performed among agents to detect potential intersections.
+* If two agents' paths intersect at any point, a collision is flagged.
 
 #### Recalculate path
 
--In case of collision, the path of the colliding agent is recalculated to evade the collision point.
+* In case of collision, the path of the colliding agent is recalculated to evade the collision point.
 The process is reiterated until a collision-free trajectory is established.
 
 
 ## Implementation
 
--The showcased demonstration is realized using the Unity game engine, utilizing the C# programming language to execute the required functionalities.
+* The showcased demonstration is realized using the Unity game engine, utilizing the C# programming language to execute the required functionalities.
 
 #### Internal Structure
 
--Each participating agent maintains a list of vectors that define its respective path.
--Collision detection involves the comparison of path lists between different agents.
--A collision incident is identified when two path segments, equidistant in terms of steps from their respective starting points, intersect.
--Collision points are logged, forming a list of vectors denoting areas to be avoided during subsequent path calculations.
+* Each participating agent maintains a list of vectors that define its respective path.
+* Collision detection involves the comparison of path lists between different agents.
+* A collision incident is identified when two path segments, equidistant in terms of steps from their respective starting points, intersect.
+* Collision points are logged, forming a list of vectors denoting areas to be avoided during subsequent path calculations.
 #### Requirements
 
--Unity
+* Unity
 
 ## Results
 
@@ -58,6 +58,6 @@ The agents correctly recalculate paths but this way of calculating the path does
 ## Useful Links
 
 #### Multi-Agent Pathfinding
--Multi agent pathfinding:
+* Multi agent pathfinding:
 https://ai.vub.ac.be/multi-agent-path-finding/?utm_source=www.google.com&utm_medium=organic&utm_campaign=Google&referrer-analytics=1
--Conflict-based search for optimal multi-agent pathfinding: https://www.sciencedirect.com/science/article/pii/S0004370214001386
+* Conflict-based search for optimal multi-agent pathfinding: https://www.sciencedirect.com/science/article/pii/S0004370214001386
