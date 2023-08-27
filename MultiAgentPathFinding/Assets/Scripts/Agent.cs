@@ -10,11 +10,14 @@ public class Agent : MonoBehaviour
     private Vector3 endLoc;
     public Pathfinding pathfinding;
     public List<Vector3> pathList;
-    private int moveIdx=0;
+    private int moveIdx=1;
     private bool isMoving = false;
     private float moveTime = 0.2f;
-    private float elapsedTime;
-    
+
+    public float moveSpeed = 3f;
+
+    private float elapsedTime = 0f;
+
     private AgentManager mgr;
 
     public void SetPathFinding()
@@ -81,40 +84,50 @@ public class Agent : MonoBehaviour
         gameObject.AddComponent<SpriteRenderer>();
         pathList = new List<Vector3>();
         sprite = Resources.Load<Sprite>("Robot");
+
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.sprite = sprite;
+        spriteRenderer.sortingOrder = 4000;
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(pathList!=null)
+        if (pathList != null && isMoving)
         {
-        if (moveIdx >= pathList.Count && isMoving)
-        {
-            isMoving = false;
+            if (moveIdx >= pathList.Count)
+            {
+                isMoving = false;
+                mgr.agentObj.Remove(gameObject);
+                Destroy(gameObject);
+                return;
+            }
 
-            mgr.agentObj.Remove(gameObject);
-            Destroy(gameObject);
-        }
-
-        }
-        if (isMoving)
-        {
-            elapsedTime += Time.deltaTime;
-            gameObject.transform.position = pathList[moveIdx];
-        }
-        if (elapsedTime >= moveTime)
-        {
-            elapsedTime = 0;
-            moveIdx++;
+            MoveAlongPath();
         }
     }
 
     public bool IsMoving()
     {
         return isMoving;
+    }
+
+    private void MoveAlongPath()
+    {
+        elapsedTime += Time.deltaTime;
+
+        float normalizedTime = elapsedTime *moveSpeed;
+        normalizedTime = Mathf.Clamp01(normalizedTime);
+
+        Vector3 newPosition = Vector3.Lerp(pathList[moveIdx - 1], pathList[moveIdx], normalizedTime);
+        transform.position = newPosition;
+
+        if (normalizedTime >= 1f)
+        {
+            elapsedTime = 0f;
+            moveIdx++;
+        }
     }
 
 }

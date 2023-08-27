@@ -46,7 +46,7 @@ public class Testing : MonoBehaviour
         {
             Vector3 mouseWorldPosition = GetMouseWorldPos();
             pathfinding.GetGrid().GetXY(mouseWorldPosition, out int x, out int y);
-            pathfinding.GetNode(x, y).SetIsWalkable(!pathfinding.GetNode(x, y).isWalkable);
+            pathfinding.GetNode(x, y).SetIsWalkable(false);
             GameObject obstacle = new GameObject("Obstacle", typeof(Obstacle));
             obstacle.transform.position = GetMouseWorldPos();
             obstacles.Add(obstacle);
@@ -57,6 +57,7 @@ public class Testing : MonoBehaviour
             started = true;
         }
         
+        if(agentMgr != null)
         if (!agentMgr.IsMoving() && started)
         {
             foreach (var target in targets)

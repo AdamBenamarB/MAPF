@@ -13,7 +13,6 @@ public class AgentManager
     }
     public void AddAgent(Vector3 startLoc,Grid<PathNode> grid)
     {
-       
         GameObject agent = new GameObject("Agent");
         agent.AddComponent<Agent>();
         agent.GetComponent<Agent>().SetLoc(startLoc);
@@ -39,7 +38,7 @@ public class AgentManager
 
     public void FindPaths()
     {
-        Vector3 avoidPoint=Vector3.zero;
+        Vector3 avoidPoint = Vector3.zero;
         bool collided = false;
         bool unresolved = true;
         int collidedActorIdx0 = 0;
@@ -47,23 +46,24 @@ public class AgentManager
         int nrOfTries = 0;
         processing = true;
 
-        for(int x=0;x<agentObj.Count;x++)
+        for (int x = 0; x < agentObj.Count; x++)
         {
             agentObj[x].GetComponent<Agent>().FindPath();
         }
 
+        List<Vector3> avoidPoints = new List<Vector3>();
         while (unresolved && nrOfTries < 20)
         {
-            List<Vector3> avoidPoints = new List<Vector3>();
 
             for (int y = 0; y < agentObj.Count; y++)
             {
                 List<Vector3> path = agentObj[y].GetComponent<Agent>().pathList;
                 if (path != null)
                 {
+                    Color color = Random.ColorHSV();
                     for (int i = 0; i < path.Count - 1; i++)
                     {
-                        Debug.DrawLine(path[i], path[i + 1], Color.red, 5f);
+                        Debug.DrawLine(path[i], path[i + 1], color, 1f);
                     }
                 }
 
@@ -72,20 +72,25 @@ public class AgentManager
                     List<Vector3> path2 = agentObj[z].GetComponent<Agent>().pathList;
                     if (path2 != null)
                     {
+
+                        Color color = Random.ColorHSV();
                         for (int i = 0; i < path2.Count - 1; i++)
                         {
 
-                            Debug.DrawLine(path2[i], path2[i + 1], Color.green, 5f);
+                            Debug.DrawLine(path2[i], path2[i + 1], color, 1f);
                         }
                     }
 
-                    int shortest = Mathf.Min(agentObj[y].GetComponent<Agent>().pathList.Count, agentObj[z].GetComponent<Agent>().pathList.Count);
+                    int shortest = Mathf.Min(agentObj[y].GetComponent<Agent>().pathList.Count,
+                        agentObj[z].GetComponent<Agent>().pathList.Count);
 
                     for (int a = 0; a < shortest - 1; a++)
                     {
                         Vector3 intersect = Vector3.zero;
-                        if (AreIntersecting(agentObj[y].GetComponent<Agent>().pathList[a], agentObj[y].GetComponent<Agent>().pathList[a + 1],
-                            agentObj[z].GetComponent<Agent>().pathList[a], agentObj[z].GetComponent<Agent>().pathList[a + 1], out intersect))
+                        if (AreIntersecting(agentObj[y].GetComponent<Agent>().pathList[a],
+                                agentObj[y].GetComponent<Agent>().pathList[a + 1],
+                                agentObj[z].GetComponent<Agent>().pathList[a],
+                                agentObj[z].GetComponent<Agent>().pathList[a + 1], out intersect))
                         {
                             if (!avoidPoints.Contains(intersect))
                             {
@@ -93,9 +98,7 @@ public class AgentManager
                                 collided = true;
 
                                 avoidPoints.Add(intersect);
-                                Debug.Log(intersect);
                                 collidedActorIdx0 = y;
-
                                 GameObject target = new GameObject("Collision", typeof(Collision));
                                 target.transform.position = intersect;
                             }
@@ -103,6 +106,7 @@ public class AgentManager
                     }
                 }
             }
+
             if (!collided)
             {
                 unresolved = false;
@@ -110,6 +114,7 @@ public class AgentManager
                 {
                     agentObj[i].GetComponent<Agent>().SetMoving(true);
                 }
+
                 processing = false;
             }
             else
@@ -121,7 +126,34 @@ public class AgentManager
 
         }
 
-        
+        for (int y = 0; y < agentObj.Count; y++)
+        {
+            List<Vector3> path = agentObj[y].GetComponent<Agent>().pathList;
+            if (path != null)
+            {
+                Color color = Color.green;
+                for (int i = 0; i < path.Count - 1; i++)
+                {
+                    Debug.DrawLine(path[i], path[i + 1], color, 5f);
+                }
+            }
+
+            for (int z = y + 1; z < agentObj.Count; z++)
+            {
+                List<Vector3> path2 = agentObj[z].GetComponent<Agent>().pathList;
+                if (path2 != null)
+                {
+
+                    Color color = Color.green;
+                    for (int i = 0; i < path2.Count - 1; i++)
+                    {
+
+                        Debug.DrawLine(path2[i], path2[i + 1], color, 5f);
+                    }
+                }
+            }
+
+        }
     }
 
     public bool AreIntersecting(Vector3 a1, Vector3 a2, Vector3 b1, Vector3 b2, out Vector3 intersection)
